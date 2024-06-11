@@ -1,18 +1,34 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Combatible" content="ie=edge">
-    <title>Shop</title>
+    <title>Колода карт</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-    <div id ="main">
-        <h1>Онлайн магазин</h1>
-        <img src="https://www.digiseller.ru/preview/1121084/p1_3775613_8ce4df5c.jpg">
-        <p>Что-то  важное.</p>
-        <button id ="bud">Купить</button>
-    </div>
+    <button id="shuffleDeck">Перемешать колоду</button>
+    <button id="drawCard">Взять карту</button>
+    <div id="card"></div>
+
+    <script>
+        var deck_id = '';
+
+        $('#shuffleDeck').click(function() {
+            $.getJSON('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=3', function(data) {
+                deck_id = data.deck_id;
+                alert('Колода перемешана, deck_id: ' + deck_id);
+            });
+        });
+
+        $('#drawCard').click(function() {
+            if(deck_id === '') {
+                alert('Сначала перемешайте колоду!');
+                return;
+            }
+            $.getJSON('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1', function(data) {
+                var cardImage = data.cards[0].image;
+                $('#card').html('<img src="' + cardImage + '">');
+            });
+        });
+    </script>
 </body>
 </html>
